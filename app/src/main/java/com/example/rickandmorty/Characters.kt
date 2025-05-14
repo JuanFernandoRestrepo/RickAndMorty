@@ -1,14 +1,21 @@
-package com.example.rickandmorty
 
 data class Characters(
-    val page: Int?,
-    val result: List<Character>
+    val info: Info?,
+    val results: List<RmCharacter>
 )
-data class Character(
+data class RmCharacter(
+    val id: Int?,
     val name: String?,
-    val photo: String?,
-    val year: Int?,
     val species: String?,
     val type: String?,
-    val generated: String?
+    val gender: String?,
+    val image: String?
 )
+data class Info(
+    val count: Int?,
+    val pages: Int?,
+    val next: String?,
+    val prev: String?
+)
+
+
