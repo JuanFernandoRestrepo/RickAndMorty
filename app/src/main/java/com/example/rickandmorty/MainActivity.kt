@@ -1,21 +1,25 @@
 package com.example.rickandmorty
 
-import Characters
-import RmCharacter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rickandmorty.adapter.CharacterAdapter
 import com.example.rickandmorty.servicies.ApiInterface
 import com.example.rickandmorty.servicies.ApiServices
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.rickandmorty.adapter.RMCharacterPagingAdapter
+import com.example.rickandmorty.viewmodel.CharactersViewModel
+import com.example.rickandmorty.viewmodel.CharactersViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
+    private val viewModel: CharactersViewModel by viewModels {
+        CharactersViewModelFactory(ApiServices.getIntance().create(ApiInterface::class.java))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -25,26 +29,13 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        val adapter = RMCharacterPagingAdapter()
+        recyclerView.adapter = adapter
 
-        getCharacterData {
-            recyclerView.adapter = CharacterAdapter(it)
+        lifecycleScope.launch {
+            viewModel.pagingDataFlow.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
         }
-    }
-
-    private fun getCharacterData(callback: (List<RmCharacter>) -> Unit) {
-        val apiService = ApiServices.getIntance().create(ApiInterface::class.java)
-        apiService.getCharacters().enqueue(object : Callback<Characters> {
-            override fun onResponse(call: Call<Characters>, response: Response<Characters>) {
-                response.body()?.results?.let {
-                    callback(it)
-                }
-            }
-
-
-
-            override fun onFailure(call: Call<Characters>, t: Throwable) {
-
-            }
-        })
     }
 }

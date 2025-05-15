@@ -43,6 +43,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.navigation:navigation-compose:2.5.0-rc01")
+    implementation ("androidx.paging:paging-common-ktx:3.3.6")
+    implementation ("androidx.paging:paging-runtime-ktx:3.3.6")
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
