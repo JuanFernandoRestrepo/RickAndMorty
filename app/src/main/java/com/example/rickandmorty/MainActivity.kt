@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.rickandmorty.adapter.RMCharacterPagingAdapter
 import com.example.rickandmorty.viewmodel.CharactersViewModel
 import com.example.rickandmorty.viewmodel.CharactersViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -22,8 +23,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
-        Thread.sleep(3000)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -38,4 +37,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        FirebaseAuth.getInstance().signOut()
+    }
+
 }
